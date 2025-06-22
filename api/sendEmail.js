@@ -1,4 +1,5 @@
 // api/sendEmail.js
+require('dotenv').config();
 const sgMail = require('@sendgrid/mail');
 const fetch = require('node-fetch');
 
@@ -68,6 +69,11 @@ const moodToSongs = {
 };
 
 // Memory cache to avoid repeating songs (optional, resets on each deployment)
+
+// console.log("SENDGRID_API_KEY starts with:", process.env.SENDGRID_API_KEY?.slice(0, 5));
+console.log("TO_EMAILS:", process.env.TO_EMAILS);
+
+
 const lastSent = {};
 
 function getRandomSongs(mood) {
@@ -78,7 +84,9 @@ function getRandomSongs(mood) {
   const shuffled = (available.length > 0 ? available : allSongs)
     .sort(() => 0.5 - Math.random());
 
-  const selected = shuffled.slice(0, Math.min(15, shuffled.length));
+  // const selected = shuffled.slice(0, Math.min(15, shuffled.length));
+  const selected = shuffled.slice(0, 2); // send exactly 2 songs
+
   lastSent[mood] = selected;
   return selected;
 }
@@ -136,3 +144,16 @@ module.exports = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
+// If running from CLI (node api/sendEmail.js), simulate req/res
+if (require.main === module) {
+  module.exports(
+    {}, // dummy req
+    {
+      status: (code) => ({
+        json: (data) => console.log(`Response ${code}:`, data)
+      })
+    }
+  );
+}
