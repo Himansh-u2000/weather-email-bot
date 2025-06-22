@@ -27,9 +27,9 @@ const moodToSongs = {
     "https://www.youtube.com/watch?v=_iktURk0X-A"
   ],
   Chill: [
-    "https://www.youtube.com/watch?v=sXdG1SbRd3A&list=RDEMa_EYmHyXjUx2YUwQ3j4-UQ&start_radio=1&rv=1sRaLqtHXQU",
-    "https://www.youtube.com/watch?v=UlWAjd9bcKw&list=RDEMa_EYmHyXjUx2YUwQ3j4-UQ&index=10",
-    "https://www.youtube.com/watch?v=9SE6B0h-4-Q&list=RDEMa_EYmHyXjUx2YUwQ3j4-UQ&index=22",
+    "https://www.youtube.com/watch?v=sXdG1SbRd3A",
+    "https://www.youtube.com/watch?v=UlWAjd9bcKw",
+    "https://www.youtube.com/watch?v=9SE6B0h-4-Q",
     "https://www.youtube.com/watch?v=rS4G5az-MKA",
     "https://www.youtube.com/watch?v=oMesPehN_Do",
     "https://www.youtube.com/watch?v=ThPinA3THas"
@@ -49,7 +49,7 @@ const moodToSongs = {
 
   ],
   "Lo-fi": [
-    "https://www.youtube.com/watch?v=0pOq8ag0Z0Y&list=RDbw9x-OtqLDg&index=28",
+    "https://www.youtube.com/watch?v=0pOq8ag0Z0Y",
     "https://www.youtube.com/watch?v=b5ilHrVoVCU",
     "https://www.youtube.com/watch?v=YIucrdfR6rI",
     "https://www.youtube.com/watch?v=_s3iubAXihM",
@@ -57,7 +57,7 @@ const moodToSongs = {
 
   ],
   Soft: [
-    "https://www.youtube.com/watch?v=bw9x-OtqLDg&list=RDbw9x-OtqLDg&start_radio=1",
+    "https://www.youtube.com/watch?v=bw9x-OtqLDg",
     "https://www.youtube.com/watch?v=ThPinA3THas",
     "https://www.youtube.com/watch?v=OXkD2izG7nI",
   ],
@@ -113,7 +113,17 @@ module.exports = async (req, res) => {
       html: htmlBody
     }));
 
-    await sgMail.send(messages, true); // true for multiple recipients
+    // await sgMail.send(messages, true); // true for multiple recipients
+    for (const message of messages) {
+      await sgMail.send({
+        ...message,
+        trackingSettings: {
+          clickTracking: { enable: false, enableText: false }
+        }
+      });
+    }
+
+
     console.log("✅ Emails sent successfully to:", recipients.join(', '));
 
     res.status(200).json({ success: true, recipients, mood, weatherType });
