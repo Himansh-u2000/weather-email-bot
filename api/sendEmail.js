@@ -34,7 +34,8 @@ const moodToSongs = {
     "https://www.youtube.com/watch?v=9SE6B0h-4-Q",
     "https://www.youtube.com/watch?v=rS4G5az-MKA",
     "https://www.youtube.com/watch?v=oMesPehN_Do",
-    "https://www.youtube.com/watch?v=ThPinA3THas"
+    "https://www.youtube.com/watch?v=ThPinA3THas",
+    "https://www.youtube.com/watch?v=2ltGXfmI6mk"
   ],
   Energetic: [
     "https://www.youtube.com/watch?v=ruEQPQX90fI",
@@ -47,6 +48,7 @@ const moodToSongs = {
     "https://www.youtube.com/watch?v=JlgkMXex2DI",
     "https://www.youtube.com/watch?v=zwsc1rVdPxA",
     "https://www.youtube.com/watch?v=hoNb6HuNmU0",
+    "https://www.youtube.com/watch?v=BBAyRBTfsOU"
 
 
   ],
