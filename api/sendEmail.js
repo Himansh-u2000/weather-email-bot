@@ -22,9 +22,11 @@ const moodToSongs = {
     "https://www.youtube.com/watch?v=pVwIiRGFEXc",
     "https://www.youtube.com/watch?v=YWmKdKig_Pc",
     "https://www.youtube.com/watch?v=4HRC6c5-2lQ",
+    "https://www.youtube.com/watch?v=KVh4KtUSW3A",
     "https://www.youtube.com/watch?v=VdyBtGaspss",
     "https://www.youtube.com/watch?v=GtPvCa3vvxA",
-    "https://www.youtube.com/watch?v=_iktURk0X-A"
+    "https://www.youtube.com/watch?v=_iktURk0X-A",
+    "https://www.youtube.com/watch?v=sVRwZEkXepg",
   ],
   Chill: [
     "https://www.youtube.com/watch?v=sXdG1SbRd3A",
