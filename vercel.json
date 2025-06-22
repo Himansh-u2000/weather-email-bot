@@ -1,0 +1,14 @@
+{
+ "functions": {
+  "api/sendEmail.js": {
+   "memory": 128,
+   "maxDuration": 10
+  }
+ },
+ "crons": [
+  {
+   "path": "/api/sendEmail",
+   "schedule": "30 2 * * *"
+  }
+ ]
+}
