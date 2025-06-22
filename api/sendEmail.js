@@ -1,60 +1,124 @@
-const fetch = require('node-fetch');
+// api/sendEmail.js
 const sgMail = require('@sendgrid/mail');
+const fetch = require('node-fetch');
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-function getRandomVideos(videos, count) {
-  const shuffled = [...videos].sort(() => 0.5 - Math.random());
-  return shuffled.slice(0, count);
+const weatherToMood = {
+  Rain: "Calm",
+  Drizzle: "Soft",
+  Thunderstorm: "Lo-fi",
+  Clear: "Energetic",
+  Clouds: "Chill",
+  Haze: "Lo-fi",
+  Smoke: "Soft"
+};
+
+const moodToSongs = {
+  Calm: [
+    "https://www.youtube.com/watch?v=1sRaLqtHXQU",
+    "https://www.youtube.com/watch?v=wejaREXePtg",
+    "https://www.youtube.com/watch?v=BNfAf4To73c",
+    "https://www.youtube.com/watch?v=pVwIiRGFEXc",
+    "https://www.youtube.com/watch?v=YWmKdKig_Pc",
+    "https://www.youtube.com/watch?v=4HRC6c5-2lQ",
+    "https://www.youtube.com/watch?v=VdyBtGaspss",
+    "https://www.youtube.com/watch?v=GtPvCa3vvxA",
+    "https://www.youtube.com/watch?v=_iktURk0X-A"
+  ],
+  Chill: [
+    "https://www.youtube.com/watch?v=sXdG1SbRd3A&list=RDEMa_EYmHyXjUx2YUwQ3j4-UQ&start_radio=1&rv=1sRaLqtHXQU",
+    "https://www.youtube.com/watch?v=UlWAjd9bcKw&list=RDEMa_EYmHyXjUx2YUwQ3j4-UQ&index=10",
+    "https://www.youtube.com/watch?v=9SE6B0h-4-Q&list=RDEMa_EYmHyXjUx2YUwQ3j4-UQ&index=22",
+    "https://www.youtube.com/watch?v=rS4G5az-MKA",
+    "https://www.youtube.com/watch?v=oMesPehN_Do",
+    "https://www.youtube.com/watch?v=ThPinA3THas"
+  ],
+  Energetic: [
+    "https://www.youtube.com/watch?v=ruEQPQX90fI",
+    "https://www.youtube.com/watch?v=yWjElYXgviM",
+    "https://www.youtube.com/watch?v=vJQMhj6WYZA",
+    "https://www.youtube.com/watch?v=B9_nql5xBFo",
+    "https://www.youtube.com/watch?v=oAVhUAaVCVQ",
+    "https://www.youtube.com/watch?v=j9cQ8FFGkxw",
+    "https://www.youtube.com/watch?v=yDv0WSgXJVg",
+    "https://www.youtube.com/watch?v=JlgkMXex2DI",
+    "https://www.youtube.com/watch?v=zwsc1rVdPxA",
+    "https://www.youtube.com/watch?v=hoNb6HuNmU0",
+
+
+  ],
+  "Lo-fi": [
+    "https://www.youtube.com/watch?v=0pOq8ag0Z0Y&list=RDbw9x-OtqLDg&index=28",
+    "https://www.youtube.com/watch?v=b5ilHrVoVCU",
+    "https://www.youtube.com/watch?v=YIucrdfR6rI",
+    "https://www.youtube.com/watch?v=_s3iubAXihM",
+    "https://www.youtube.com/watch?v=NeXbmEnpSz0",
+
+  ],
+  Soft: [
+    "https://www.youtube.com/watch?v=bw9x-OtqLDg&list=RDbw9x-OtqLDg&start_radio=1",
+    "https://www.youtube.com/watch?v=ThPinA3THas",
+    "https://www.youtube.com/watch?v=OXkD2izG7nI",
+  ],
+};
+
+// Memory cache to avoid repeating songs (optional, resets on each deployment)
+const lastSent = {};
+
+function getRandomSongs(mood) {
+  const allSongs = moodToSongs[mood] || moodToSongs["Chill"];
+  const prev = lastSent[mood] || [];
+
+  const available = allSongs.filter(song => !prev.includes(song));
+  const shuffled = (available.length > 0 ? available : allSongs)
+    .sort(() => 0.5 - Math.random());
+
+  const selected = shuffled.slice(0, Math.min(15, shuffled.length));
+  lastSent[mood] = selected;
+  return selected;
+}
+
+async function getWeather(location, apiKey) {
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${apiKey}`;
+  const res = await fetch(url);
+  const data = await res.json();
+
+  if (data.cod !== 200) throw new Error(`Weather API error: ${data.message}`);
+  return data.weather[0].main; // e.g., 'Rain', 'Clear'
 }
 
 module.exports = async (req, res) => {
-  const location = process.env.LOCATION || 'London';
-  const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${process.env.WEATHER_API_KEY}&units=metric`;
-
   try {
-    const response = await fetch(weatherUrl);
-    const data = await response.json();
-    const condition = data.weather[0].main.toLowerCase();
+    const weatherType = await getWeather(process.env.LOCATION, process.env.WEATHER_API_KEY);
+    const mood = weatherToMood[weatherType] || "Chill";
+    const songLinks = getRandomSongs(mood);
 
-    const playlists = {
-      rain: [
-        'https://youtu.be/song1', 'https://youtu.be/song2', 'https://youtu.be/song3',
-        'https://youtu.be/song4', 'https://youtu.be/song5', 'https://youtu.be/song6'
-      ],
-      clear: [
-        'https://youtu.be/song7', 'https://youtu.be/song8', 'https://youtu.be/song9',
-        'https://youtu.be/song10', 'https://youtu.be/song11', 'https://youtu.be/song12'
-      ],
-      snow: [
-        'https://youtu.be/song13', 'https://youtu.be/song14', 'https://youtu.be/song15',
-        'https://youtu.be/song16', 'https://youtu.be/song17'
-      ],
-      clouds: [
-        'https://youtu.be/song18', 'https://youtu.be/song19', 'https://youtu.be/song20',
-        'https://youtu.be/song21', 'https://youtu.be/song22'
-      ],
-      default: [
-        'https://youtu.be/default1', 'https://youtu.be/default2'
-      ]
-    };
+    const songListHTML = songLinks.map((link, i) => `<li><a href="${link}">Song ${i + 1}</a></li>`).join("");
 
-    const weatherKey = playlists[condition] ? condition : 'default';
-    const selectedVideos = getRandomVideos(playlists[weatherKey], 1); // Pick 1 random songs
+    const htmlBody = `
+      <h3>Good Morning! 🌤️</h3>
+      <p>Today's weather in <strong>${process.env.LOCATION}</strong> is <strong>${weatherType}</strong>.<br>
+      So here's a <strong>${mood}</strong> playlist for you:</p>
+      <ul>${songListHTML}</ul>
+      <p>Enjoy your day! 🎵</p>
+    `;
 
-    const videoList = selectedVideos.map((url, idx) => `${idx + 1}. ${url}`).join('\n');
+    const recipients = process.env.TO_EMAILS.split(',').map(email => email.trim());
 
-    const msg = {
-      to: process.env.TO_EMAIL,
+    const messages = recipients.map(email => ({
+      to: email,
       from: process.env.FROM_EMAIL,
-      subject: `Today's Weather in ${location}: ${condition}`,
-      text: `Hello!\n\nThe weather today in ${location} is "${condition}".\nHere are some songs for you:\n\n${videoList}`
-    };
+      subject: `🎵 ${mood} Playlist for Today's ${weatherType} Weather`,
+      html: htmlBody
+    }));
 
-    await sgMail.send(msg);
-    res.status(200).send('Email sent with songs.');
+    await sgMail.send(messages, true); // true for multiple recipients
+    console.log("✅ Emails sent successfully to:", recipients.join(', '));
+
+    res.status(200).json({ success: true, recipients, mood, weatherType });
   } catch (error) {
-    console.error(error);
-    res.status(500).send('Error sending email.');
+    console.error("❌ Error:", error.message);
+    res.status(500).json({ error: error.message });
   }
 };
