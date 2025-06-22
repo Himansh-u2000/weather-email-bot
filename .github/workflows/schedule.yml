@@ -1,0 +1,14 @@
+name: Send Daily Email
+
+on:
+  schedule:
+    - cron: '30 2 * * *'   # Runs at 8 AM IST (2:30 AM UTC)
+  workflow_dispatch:        # Also allows manual trigger
+
+jobs:
+  send-email:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call Vercel API to trigger email
+        run: |
+          curl --fail https://weather-email-bot.vercel.app/api/sendEmail
