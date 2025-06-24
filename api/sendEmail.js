@@ -114,6 +114,7 @@ module.exports = async (req, res) => {
       So here's a <strong>${mood}</strong> playlist for you:</p>
       <ul>${songListHTML}</ul>
       <p>Enjoy your day! 🎵</p>
+      <h4>From your Friend</h4>
     `;
 
     const recipients = process.env.TO_EMAILS.split(',').map(email => email.trim());
