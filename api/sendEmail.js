@@ -2,6 +2,10 @@
 require('dotenv').config();
 const sgMail = require('@sendgrid/mail');
 const fetch = require('node-fetch');
+const fs = require('fs');
+const path = require('path');
+
+const emailTemplate = fs.readFileSync(path.join(__dirname, 'emailTemplate.html'), 'utf8');
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -106,16 +110,16 @@ module.exports = async (req, res) => {
     const mood = weatherToMood[weatherType] || "Chill";
     const songLinks = getRandomSongs(mood);
 
-    const songListHTML = songLinks.map((link, i) => `<li><a href="${link}">Song ${i + 1}</a></li>`).join("");
+    // Get individual song recommendations
+    const songRecommendation1 = songLinks[0] ? `<a href="${songLinks[0]}">Song 1</a>` : "No song available";
+    const songRecommendation2 = songLinks[1] ? `<a href="${songLinks[1]}">Song 2</a>` : "No song available";
 
-    const htmlBody = `
-      <h3>Good Morning! 🌤️</h3>
-      <p>Today's weather in <strong>${process.env.LOCATION}</strong> is <strong>${weatherType}</strong>.<br>
-      So here's a <strong>${mood}</strong> playlist for you:</p>
-      <ul>${songListHTML}</ul>
-      <p>Enjoy your day! 🎵</p>
-      <h4>From your Friend</h4>
-    `;
+    // Replace template variables
+    let htmlBody = emailTemplate
+      .replace(/\$\{process\.env\.LOCATION\}/g, process.env.LOCATION)
+      .replace(/\$\{weatherType\}/g, weatherType)
+      .replace(/\$\{songRecommendation1\}/g, songRecommendation1)
+      .replace(/\$\{songRecommendation2\}/g, songRecommendation2);
 
     const recipients = process.env.TO_EMAILS.split(',').map(email => email.trim());
 

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Good Morning Friend</title>
+  <style>
+   body {
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to right, #fceabb, #f8b500);
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+   }
+   .email-container {
+    background-color: #fff8f0;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    max-width: 600px;
+    text-align: center;
+   }
+   h1 {
+    font-size: 2em;
+    color: #ff7e5f;
+    margin-bottom: 10px;
+   }
+   p {
+    font-size: 1.1em;
+    margin: 10px 0;
+   }
+   ul {
+    list-style: none;
+    padding: 0;
+   }
+   li {
+    background-color: #ffe9d6;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 12px;
+   }
+   .footer {
+    margin-top: 20px;
+    font-style: italic;
+    color: #555;
+   }
+  </style>
+ </head>
+ <body>
+  <div class="email-container">
+   <h1>Good Morning, My Friend ☀️</h1>
+   <p>Waking up just got sweeter knowing you’re here. 💌</p>
+   <p>
+    Today’s weather in <strong>${process.env.LOCATION}</strong> is
+    <strong>${weatherType}</strong>.
+   </p>
+   <p>It’s the perfect moment for these songs I picked just for you:</p>
+   <ul>
+    <li>${songRecommendation1}</li>
+    <li>${songRecommendation2}</li>
+   </ul>
+   <p>Let the music carry a little piece of my heart to you today. 🎶</p>
+   <p class="footer">With a warm smile, from your friend 💫</p>
+  </div>
+ </body>
+</html>
