@@ -31,8 +31,8 @@ Perfect for setting the vibe for your day! ☁️🎧
 
 ## 📸 Sample Email
 
-> **Subject:** 🎵 Chill Playlist for Today's Clouds Weather  
->  
+> **Subject:** 🎵 Chill Playlist for Today's Clouds Weather
+>
 > **Body:** Includes the current weather, mood, and two curated songs.
 
 ---
@@ -41,7 +41,7 @@ Perfect for setting the vibe for your day! ☁️🎧
 
 ### 1. Clone the Repo
 
-```bash
+````bash
 git clone https://github.com/your-username/weather-email-bot.git
 cd weather-email-bot
 
@@ -50,7 +50,7 @@ cd weather-email-bot
 
 ```bash
 npm install
-```
+````
 
 ### 3. Create a `.env` File
 
@@ -114,13 +114,13 @@ Go to your [Vercel dashboard](https://vercel.com/dashboard):
 
 Add the following keys:
 
-| Key               | Value                          |
-|------------------|--------------------------------|
-| SENDGRID_API_KEY | your_sendgrid_api_key          |
-| WEATHER_API_KEY  | your_openweathermap_api_key    |
-| FROM_EMAIL       | your_verified_sender_email     |
+| Key              | Value                                         |
+| ---------------- | --------------------------------------------- |
+| SENDGRID_API_KEY | your_sendgrid_api_key                         |
+| WEATHER_API_KEY  | your_openweathermap_api_key                   |
+| FROM_EMAIL       | your_verified_sender_email                    |
 | TO_EMAIL         | recipient1@example.com,recipient2@example.com |
-| LOCATION         | e.g. Deoghar                   |
+| LOCATION         | e.g. Rishikesh                                |
 
 Then **redeploy** the project.
 
@@ -152,10 +152,10 @@ Schedule: 0 7 * * *   # Every day at 7 AM UTC
 
 ## 🧪 Troubleshooting
 
-- **Not receiving emails?**  
+- **Not receiving emails?**
   - Ensure your SendGrid sender is verified.
   - Check SendGrid's daily email limits.
-- **Error: `"Cannot read properties of undefined (reading 'split')"`**  
+- **Error: `"Cannot read properties of undefined (reading 'split')"`**
   - Make sure `.env` variables are loaded locally.
   - Set all environment variables in Vercel properly.
 - Use `console.log(process.env)` to debug local environment values.
